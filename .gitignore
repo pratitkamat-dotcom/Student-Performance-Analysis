@@ -129,8 +129,8 @@ venv.bak/
 .idea/
 
 # Local databases and models (ignore generated machine learning models and dataset CSVs to keep repo clean)
-dataset/*.csv
-dataset/*.xlsx
-model/*.pkl
-model/*.h5
-model/*.joblib
+# dataset/*.csv
+# dataset/*.xlsx
+# model/*.pkl
+# model/*.h5
+# model/*.joblib
