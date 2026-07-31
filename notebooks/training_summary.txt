@@ -1,0 +1,28 @@
+=== MODEL TRAINING & COMPARISON REPORT ===
+
+Dataset split details for Classification:
+* Train instances: 316 (213 Passes, 103 Fails)
+* Test instances:  79 (52 Passes, 27 Fails)
+
+[Logistic Regression] Evaluation Metrics:
+   * Accuracy:  0.9114
+   * Precision: 0.9412
+   * Recall:    0.9231
+   * F1-Score:  0.9320
+
+[Decision Tree] Evaluation Metrics:
+   * Accuracy:  0.8987
+   * Precision: 0.9074
+   * Recall:    0.9423
+   * F1-Score:  0.9245
+
+[Random Forest] Evaluation Metrics:
+   * Accuracy:  0.9114
+   * Precision: 0.9412
+   * Recall:    0.9231
+   * F1-Score:  0.9320
+
+==============================================
+🏆 RECOMMENDED MODEL: Logistic Regression
+Accuracy: 0.9114
+==============================================

@@ -1,0 +1,203 @@
+/* Import elegant modern typography */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #6C63FF 0%, #3B30E5 100%);
+    --bg-gradient: radial-gradient(circle at 10% 20%, rgb(18, 16, 35) 0%, rgb(31, 27, 61) 90%);
+    --accent-neon: #00F2FE;
+    --success-neon: #00F5D4;
+    --danger-neon: #FF007F;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+    --text-primary: #F8F9FA;
+    --text-muted: #B3B9C1;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding-bottom: 3rem;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism card utility */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 var(--glass-shadow);
+    border-radius: 18px;
+    padding: 2rem;
+    transition: all 0.3s ease-in-out;
+}
+
+.glass-panel:hover {
+    border-color: rgba(108, 99, 255, 0.2);
+    box-shadow: 0 12px 40px 0 rgba(108, 99, 255, 0.15);
+}
+
+.header-accent {
+    background: linear-gradient(to right, #ffffff, #8892b0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* Custom form elements */
+.form-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-select, .form-control {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px !important;
+    padding: 0.6rem 1rem !important;
+    font-weight: 400;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.form-select option {
+    background: #1f1b3d !important;
+    color: var(--text-primary) !important;
+}
+
+.form-select:focus, .form-control:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--accent-neon) !important;
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.25) !important;
+    outline: none !important;
+}
+
+/* Step cards sectioning */
+.section-card {
+    border-left: 4px solid #6C63FF;
+    margin-bottom: 1.5rem;
+}
+
+/* Premium sliders */
+.form-range {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    outline: none;
+}
+
+.form-range::-webkit-slider-thumb {
+    background: #6C63FF;
+    border: 2px solid var(--accent-neon);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* Interactive custom submit buttons */
+.btn-predict {
+    background: var(--primary-gradient);
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    padding: 0.8rem 2rem;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.4);
+}
+
+.btn-predict:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 99, 255, 0.6);
+    color: #ffffff;
+}
+
+.btn-predict:active {
+    transform: translateY(1px);
+}
+
+.btn-secondary-custom {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.8rem 2rem;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary-custom:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+/* Prediction Results style */
+.badge-pass {
+    background: rgba(0, 245, 212, 0.1);
+    border: 1px solid var(--success-neon);
+    color: var(--success-neon);
+    font-size: 2rem;
+    padding: 0.8rem 2rem;
+    border-radius: 12px;
+    text-shadow: 0 0 10px rgba(0, 245, 212, 0.2);
+}
+
+.badge-fail {
+    background: rgba(255, 0, 127, 0.1);
+    border: 1px solid var(--danger-neon);
+    color: var(--danger-neon);
+    font-size: 2rem;
+    padding: 0.8rem 2rem;
+    border-radius: 12px;
+    text-shadow: 0 0 10px rgba(255, 0, 127, 0.2);
+}
+
+.prob-meter-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 4px;
+    border: 1px solid var(--glass-border);
+}
+
+.progress-bar-success {
+    background: linear-gradient(to right, #3B30E5, var(--success-neon)) !important;
+}
+
+.progress-bar-danger {
+    background: linear-gradient(to right, #9B5DE5, var(--danger-neon)) !important;
+}
+
+.custom-card-header {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent-neon);
+}
+
+/* Micro-animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animated-fade-in {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Student Performance Analyser{% endblock %}
+
+{% block content %}
+<div class="row pt-3">
+    <!-- Welcome Panel -->
+    <div class="col-xl-8 mx-auto text-center mb-5">
+        <h1 class="header-accent display-4 fw-bold mb-3"><i class="fa-solid fa-graduation-cap text-info me-2"></i>Student Performance Analyzer</h1>
+        <p class="text-muted fs-5 px-3">
+            Welcome to the Student Outcomes Prediction Platform. This system applies a Logistic Regression classification model to predict academic outcomes based on demographic records, household background, study time, absences, and key mid-term marks.
+        </p>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="{{ url_for('predict_form') }}" class="btn btn-predict btn-lg px-4">
+                <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Evaluate Student
+            </a>
+            <a href="{{ url_for('history') }}" class="btn btn-secondary-custom btn-lg px-4">
+                <i class="fa-solid fa-folder-open me-2"></i>View History
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Stats Panel -->
+<div class="row g-4 mb-5">
+    
+    <!-- Total Predictions Card -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="glass-panel text-center pb-4 pt-4">
+            <i class="fa-solid fa-calculator text-primary fa-2x mb-3"></i>
+            <h5 class="text-muted">Total Appraised</h5>
+            <h2 class="fw-bold text-white display-5 mb-0">{{ stats.total }}</h2>
+            <small class="text-muted">Evaluations logged in DB</small>
+        </div>
+    </div>
+
+    <!-- Passes Predictions Card -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="glass-panel text-center pb-4 pt-4" style="border-left: 3px solid var(--success-neon);">
+            <i class="fa-solid fa-circle-check text-success fa-2x mb-3"></i>
+            <h5 class="text-muted">Predicted Passes</h5>
+            <h2 class="fw-bold text-success display-5 mb-0">{{ stats.passes }}</h2>
+            <small class="text-muted">Academic pass predictions</small>
+        </div>
+    </div>
+
+    <!-- Fails Predictions Card -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="glass-panel text-center pb-4 pt-4" style="border-left: 3px solid var(--danger-neon);">
+            <i class="fa-solid fa-triangle-exclamation text-danger fa-2x mb-3"></i>
+            <h5 class="text-muted">Predicted Risks</h5>
+            <h2 class="fw-bold text-danger display-5 mb-0">{{ stats.fails }}</h2>
+            <small class="text-muted">Students identified at failure risk</small>
+        </div>
+    </div>
+
+    <!-- Average Absences Card -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="glass-panel text-center pb-4 pt-4">
+            <i class="fa-solid fa-user-xmark text-warning fa-2x mb-3"></i>
+            <h5 class="text-muted">Avg. Absences</h5>
+            <h2 class="fw-bold text-white display-5 mb-0">{{ stats.avg_absences }}</h2>
+            <small class="text-muted">Semester class absences (avg)</small>
+        </div>
+    </div>
+
+</div>
+
+<!-- Info Panel -->
+<div class="row pt-2 pb-5">
+    <div class="col-md-6 mb-4">
+        <div class="glass-panel h-100">
+            <h4 class="custom-card-header mb-3"><i class="fa-solid fa-brain me-2"></i>How the Model Works</h4>
+            <p class="text-muted">
+                Our model utilizes student attributes classified under the UCI Cortez secondary education framework. The backend loads a pre-trained <strong>Logistic Regression</strong> classifier. Upon form submission, the inputs are mapped to binary integers and passed to the model coefficients, which predict the pass/fail label along with accuracy probability limits.
+            </p>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="glass-panel h-100">
+            <h4 class="custom-card-header mb-3" style="color: #00F2FE;"><i class="fa-solid fa-database me-2"></i>Database Storage (SQLite)</h4>
+            <p class="text-muted">
+                Each evaluation is stored in real-time in an SQLite relational database (`students.db`). This allows schools and teachers to maintain a history of student evaluations. You can browse all previous entries, check evaluated parameter summaries, and track logs from the <strong>Prediction History</strong> page.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

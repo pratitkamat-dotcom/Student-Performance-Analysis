@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Evaluate Student - Student Performance Analyser{% endblock %}
+
+{% block content %}
+<div class="row mb-4 pt-3">
+    <div class="col text-center">
+        <h2 class="header-accent fw-bold"><i class="fa-solid fa-wand-magic-sparkles text-info me-2"></i>Student Prediction Form</h2>
+        <p class="text-muted">Enter student profiles below to compute pass/fail predictions.</p>
+    </div>
+</div>
+
+<form action="{{ url_for('predict') }}" method="POST">
+    <!-- Student Info Card -->
+    <div class="row mb-2">
+        <div class="col-12">
+            <div class="glass-panel section-card mb-0" style="border-left-color: #6C63FF;">
+                <h4 class="custom-card-header mb-4">
+                    <i class="fa-solid fa-address-card me-2"></i>Student Identification
+                </h4>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="student_name" class="form-label">Student Name</label>
+                        <input type="text" class="form-control" id="student_name" name="student_name" placeholder="E.g., John Doe" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="roll_number" class="form-label">Roll Number</label>
+                        <input type="text" class="form-control" id="roll_number" name="roll_number" placeholder="E.g., CS2026-104" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        
+        <!-- Section 1: Demographics -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-panel h-100 section-card">
+                <h4 class="custom-card-header mb-4">
+                    <i class="fa-solid fa-user-circle me-2"></i>Demographics
+                </h4>
+                
+                <div class="mb-3">
+                    <label for="sex" class="form-label">Gender (sex)</label>
+                    <select class="form-select" id="sex" name="sex" required>
+                        <option value="0">Female</option>
+                        <option value="1">Male</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="age" class="form-label">Age</label>
+                    <input type="number" class="form-control" id="age" name="age" min="15" max="22" value="17" required>
+                    <small class="text-muted d-block mt-1">Acceptable range (15 - 22)</small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="address" class="form-label">Area Residence</label>
+                    <select class="form-select" id="address" name="address" required>
+                        <option value="1">Urban (Town/City)</option>
+                        <option value="0">Rural (Countryside)</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="romantic" class="form-label">In a Romantic Relationship?</label>
+                    <select class="form-select" id="romantic" name="romantic" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Household & Support -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-panel h-100 section-card" style="border-left-color: #00F2FE;">
+                <h4 class="custom-card-header mb-4" style="color: #00F2FE;">
+                    <i class="fa-solid fa-users-rectangle me-2"></i>Household & Support
+                </h4>
+
+                <div class="mb-3">
+                    <label for="Medu" class="form-label">Mother's Education Level</label>
+                    <select class="form-select" id="Medu" name="Medu" required>
+                        <option value="4">Higher Education (University)</option>
+                        <option value="3">Secondary School (High School)</option>
+                        <option value="2">5th to 9th Grade</option>
+                        <option value="1">Primary School (4th Grade)</option>
+                        <option value="0">None</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Fedu" class="form-label">Father's Education Level</label>
+                    <select class="form-select" id="Fedu" name="Fedu" required>
+                        <option value="4">Higher Education (University)</option>
+                        <option value="3">Secondary School (High School)</option>
+                        <option value="2">5th to 9th Grade</option>
+                        <option value="1">Primary School (4th Grade)</option>
+                        <option value="0">None</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="schoolsup" class="form-label">Extra School Tutorial Support?</label>
+                    <select class="form-select" id="schoolsup" name="schoolsup" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="famsup" class="form-label">Family Educational Support?</label>
+                    <select class="form-select" id="famsup" name="famsup" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Lifestyle & Habits -->
+        <div class="col-md-6 col-lg-4">
+            <div class="glass-panel h-100 section-card" style="border-left-color: #00F5D4;">
+                <h4 class="custom-card-header mb-4" style="color: #00F5D4;">
+                    <i class="fa-solid fa-clock me-2"></i>Lifestyle & Habits
+                </h4>
+
+                <div class="mb-3">
+                    <label for="studytime" class="form-label">Weekly Study Hours</label>
+                    <select class="form-select" id="studytime" name="studytime" required>
+                        <option value="2">2 to 5 Hours</option>
+                        <option value="1">&lt; 2 Hours</option>
+                        <option value="3">5 to 10 Hours</option>
+                        <option value="4">&gt; 10 Hours</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="goout" class="form-label">Socializing (Going out with friends)</label>
+                    <input type="range" class="form-range" id="goout" name="goout" min="1" max="5" value="3">
+                    <div class="d-flex justify-content-between text-muted fs-6 mt-1">
+                                <span>Very Low</span>
+                                <span>Very High</span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="health" class="form-label">Current Health Status</label>
+                    <input type="range" class="form-range" id="health" name="health" min="1" max="5" value="4">
+                    <div class="d-flex justify-content-between text-muted fs-6 mt-1">
+                                <span>Very Poor</span>
+                                <span>Very Good</span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="absences" class="form-label">Absences Count</label>
+                    <input type="number" class="form-control" id="absences" name="absences" min="0" max="93" value="0" required>
+                    <small class="text-muted d-block mt-1">Days missed this semester (0 - 93)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Academic Background -->
+        <div class="col-12 font-weight-bold">
+            <div class="glass-panel section-card" style="border-left-color: #FFD166;">
+                <h4 class="custom-card-header mb-4" style="color: #FFD166;">
+                    <i class="fa-solid fa-chart-line me-2"></i>Academic History & Grades
+                </h4>
+                
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-1">
+                            <label for="failures" class="form-label">Number of Past failures</label>
+                            <select class="form-select" id="failures" name="failures" required>
+                                <option value="0">0 Failures</option>
+                                <option value="1">1 Failure</option>
+                                <option value="2">2 Failures</option>
+                                <option value="3">3 or More</option>
+                            </select>
+                            <small class="text-muted mt-1 d-block">Number of previously failed classes</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="p-1">
+                            <label for="G1" class="form-label">Semester 1 Grade (G1)</label>
+                            <input type="number" class="form-control" id="G1" name="G1" min="0" max="20" value="10" required>
+                            <small class="text-muted mt-1 d-block">Numeric points score (0 - 20)</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="p-1">
+                            <label for="G2" class="form-label">Semester 2 Grade (G2)</label>
+                            <input type="number" class="form-control" id="G2" name="G2" min="0" max="20" value="10" required>
+                            <small class="text-muted mt-1 d-block">Numeric points score (0 - 20)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Prediction Button -->
+    <div class="text-center mt-5 mb-5">
+        <button type="submit" class="btn btn-predict btn-lg px-5">
+            <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Analyze & Predict Outcomes
+        </button>
+    </div>
+</form>
+{% endblock %}
