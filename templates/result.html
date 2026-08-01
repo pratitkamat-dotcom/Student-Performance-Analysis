@@ -138,6 +138,10 @@
                             {% endif %}
                         </strong>
                     </div>
+                    <div class="border-bottom border-secondary pb-2 mb-2">
+                        <span class="text-muted d-block small">Nightly Sleep Hours</span>
+                        <strong class="text-white">{{ result.sleep_hours }} Hours</strong>
+                    </div>
                     <div class="pb-2">
                         <span class="text-muted d-block small">Recent Semester Grades</span>
                         <strong class="text-white">Semester 1: {{ result.features.G1 }}/20 | Semester 2: {{ result.features.G2 }}/20</strong>
@@ -164,6 +168,12 @@
                             {{ result.features.absences }} Days
                         </strong>
                     </div>
+                    <div class="border-bottom border-secondary pb-2 mb-2">
+                        <span class="text-muted d-block small">Assignments Completion Rate</span>
+                        <strong class="text-white">
+                            {{ result.assignments }}%
+                        </strong>
+                    </div>
                     <div class="pb-2">
                         <span class="text-muted d-block small">Social Habits & Health</span>
                         <strong class="text-white">
@@ -179,8 +189,8 @@
             <a href="{{ url_for('predict_form') }}" class="btn btn-predict">
                 <i class="fa-solid fa-wand-magic-sparkles me-2"></i>New Prediction
             </a>
-            <a href="{{ url_for('history') }}" class="btn btn-secondary-custom">
-                <i class="fa-solid fa-folder-open me-2"></i>Prediction History
+            <a href="{{ url_for('index') }}" class="btn btn-secondary-custom">
+                <i class="fa-solid fa-house me-2"></i>Go to Home
             </a>
         </div>
 

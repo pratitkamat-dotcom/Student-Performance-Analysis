@@ -14,8 +14,8 @@
             <a href="{{ url_for('predict_form') }}" class="btn btn-predict btn-lg px-4">
                 <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Evaluate Student
             </a>
-            <a href="{{ url_for('history') }}" class="btn btn-secondary-custom btn-lg px-4">
-                <i class="fa-solid fa-folder-open me-2"></i>View History
+            <a href="{{ url_for('about') }}" class="btn btn-secondary-custom btn-lg px-4">
+                <i class="fa-solid fa-circle-info me-2"></i>About Predictor
             </a>
         </div>
     </div>
@@ -80,7 +80,7 @@
         <div class="glass-panel h-100">
             <h4 class="custom-card-header mb-3" style="color: #00F2FE;"><i class="fa-solid fa-database me-2"></i>Database Storage (SQLite)</h4>
             <p class="text-muted">
-                Each evaluation is stored in real-time in an SQLite relational database (`students.db`). This allows schools and teachers to maintain a history of student evaluations. You can browse all previous entries, check evaluated parameter summaries, and track logs from the <strong>Prediction History</strong> page.
+                Each evaluation is stored in real-time in an SQLite relational database (`students.db`). This allows administration and academic counselors to maintain a secure history of student evaluations, which can be queried, filtered, and reviewed within the secure Admin Panel.
             </p>
         </div>
     </div>

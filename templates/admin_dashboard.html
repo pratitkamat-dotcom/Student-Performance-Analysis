@@ -1,0 +1,79 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Administrator Dashboard - Student Analytics{% endblock %}
+
+{% block content %}
+<div class="row pt-3 mb-4">
+    <div class="col-12">
+        <h2 class="header-accent fw-bold"><i class="fa-solid fa-gauge-high text-info me-2"></i>Administrator Control Panel</h2>
+        <p class="text-muted">Explore live database counts, model metrics, and prediction configurations</p>
+    </div>
+</div>
+
+<!-- Dashboard Stats Panel using Bootstrap Cards -->
+<div class="row g-4 mb-5">
+    
+    <!-- Total Students Card -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="glass-panel text-center pb-4 pt-4 admin-card-hover border-start border-info" style="border-left-width: 4px !important;">
+            <i class="fa-solid fa-users text-info fa-2x mb-3"></i>
+            <h5 class="text-muted">Total Students</h5>
+            <h2 class="fw-bold text-white display-5 mb-1">{{ stats.total_students }}</h2>
+            <small class="text-muted">Unique roll IDs in DB</small>
+        </div>
+    </div>
+
+    <!-- Total Predictions Card -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="glass-panel text-center pb-4 pt-4 admin-card-hover border-start border-primary" style="border-left-width: 4px !important;">
+            <i class="fa-solid fa-calculator text-primary fa-2x mb-3"></i>
+            <h5 class="text-muted">Total Predictions</h5>
+            <h2 class="fw-bold text-white display-5 mb-1">{{ stats.total_predictions }}</h2>
+            <small class="text-muted">Total ML queries run</small>
+        </div>
+    </div>
+
+    <!-- Today's Predictions Card -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="glass-panel text-center pb-4 pt-4 admin-card-hover border-start border-success" style="border-left-width: 4px !important;">
+            <i class="fa-solid fa-calendar-day text-success fa-2x mb-3"></i>
+            <h5 class="text-muted">Today's Forecasts</h5>
+            <h2 class="fw-bold text-success display-5 mb-1">{{ stats.today_predictions }}</h2>
+            <small class="text-muted">Evaluations logged today</small>
+        </div>
+    </div>
+
+    <!-- Latest Prediction Time Card -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="glass-panel text-center pb-4 pt-4 admin-card-hover border-start border-warning" style="border-left-width: 4px !important;">
+            <i class="fa-solid fa-stopwatch text-warning fa-2x mb-3"></i>
+            <h5 class="text-muted text-truncate">Latest Evaluation</h5>
+            <h4 class="fw-bold text-white mt-2 mb-1" style="font-size: 1.15rem; word-break: break-all;">
+                {{ stats.latest_prediction_time }}
+            </h4>
+            <small class="text-muted">Newest log timestamp</small>
+        </div>
+    </div>
+
+</div>
+
+<!-- Navigation Quick-Links -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="glass-panel p-5 text-center">
+            <h3 class="fw-bold text-white mb-3">Manage and Audit Academic Database</h3>
+            <p class="text-muted fs-5 px-md-5 mb-4">
+                Access the full student outcomes database. Search records by name or roll number, filter reports by date or predicted performance metrics, and audit live student records.
+            </p>
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <a href="{{ url_for('admin_history') }}" class="btn btn-predict btn-lg px-4">
+                    <i class="fa-solid fa-list-check me-2"></i>View Student Prediction History
+                </a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary-custom btn-lg px-4">
+                    <i class="fa-solid fa-user me-2"></i>Go to Student Portal
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Administrator Authentication{% endblock %}
+
+{% block content %}
+<div class="row min-vh-75 align-items-center justify-content-center pt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="glass-panel p-5 text-center">
+            
+            <!-- Lock Icon -->
+            <div class="mb-4">
+                <i class="fa-solid fa-lock-open text-info fa-3x"></i>
+            </div>
+            
+            <h2 class="header-accent fw-bold mb-2">Secure Node Authentication</h2>
+            <p class="text-muted small mb-4">Enter administration credentials to signature access keys</p>
+            
+            <!-- Login Form -->
+            <form action="{{ url_for('admin_login') }}" method="POST">
+                
+                <!-- Username -->
+                <div class="mb-3 text-start">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-group search-input-group">
+                        <span class="input-group-text bg-transparent border-0 text-muted">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" class="form-control text-light" id="username" name="username" placeholder="E.g., admin" required>
+                    </div>
+                </div>
+                
+                <!-- Password -->
+                <div class="mb-4 text-start">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group search-input-group">
+                        <span class="input-group-text bg-transparent border-0 text-muted">
+                            <i class="fa-solid fa-key"></i>
+                        </span>
+                        <input type="password" class="form-control text-light" id="password" name="password" placeholder="E.g., **********" required>
+                    </div>
+                </div>
+                
+                <!-- Submit -->
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-predict py-2.5">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i>Authenticate Session
+                    </button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

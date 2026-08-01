@@ -9,13 +9,7 @@
         <p class="text-muted">Database logs of all evaluated student files</p>
     </div>
     <div class="col-md-4 text-md-end">
-        {% if records %}
-            <form action="{{ url_for('clear_history') }}" method="POST" onsubmit="return confirm('WARNING: This will permanently delete all records in the database. Are you sure you want to proceed?');">
-                <button type="submit" class="btn btn-outline-danger">
-                    <i class="fa-solid fa-trash-can me-2"></i>Clear Database History
-                </button>
-            </form>
-        {% endif %}
+        
     </div>
 </div>
 

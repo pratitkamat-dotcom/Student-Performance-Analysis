@@ -160,6 +160,12 @@
                     <input type="number" class="form-control" id="absences" name="absences" min="0" max="93" value="0" required>
                     <small class="text-muted d-block mt-1">Days missed this semester (0 - 93)</small>
                 </div>
+
+                <div class="mb-3">
+                    <label for="sleep_hours" class="form-label">Sleep Hours per Night</label>
+                    <input type="number" class="form-control" id="sleep_hours" name="sleep_hours" min="3" max="12" value="8" required>
+                    <small class="text-muted d-block mt-1">Typical nightly sleep range (3 - 12)</small>
+                </div>
             </div>
         </div>
 
@@ -171,7 +177,7 @@
                 </h4>
                 
                 <div class="row g-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="p-1">
                             <label for="failures" class="form-label">Number of Past failures</label>
                             <select class="form-select" id="failures" name="failures" required>
@@ -180,11 +186,19 @@
                                 <option value="2">2 Failures</option>
                                 <option value="3">3 or More</option>
                             </select>
-                            <small class="text-muted mt-1 d-block">Number of previously failed classes</small>
+                            <small class="text-muted mt-1 d-block">Previously failed classes</small>
                         </div>
                     </div>
                     
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <div class="p-1">
+                            <label for="assignments" class="form-label">Assignments Completed (%)</label>
+                            <input type="number" class="form-control" id="assignments" name="assignments" min="0" max="100" value="85" required>
+                            <small class="text-muted mt-1 d-block">Completion rate percentage (0 - 100)</small>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
                         <div class="p-1">
                             <label for="G1" class="form-label">Semester 1 Grade (G1)</label>
                             <input type="number" class="form-control" id="G1" name="G1" min="0" max="20" value="10" required>
@@ -192,7 +206,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="p-1">
                             <label for="G2" class="form-label">Semester 2 Grade (G2)</label>
                             <input type="number" class="form-control" id="G2" name="G2" min="0" max="20" value="10" required>

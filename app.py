@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import pandas as pd
 import joblib
 import sqlite3
 import os
+from functools import wraps
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "student_performance_analyser_db_secret_key"
@@ -11,6 +13,10 @@ app.secret_key = "student_performance_analyser_db_secret_key"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "model", "best_model.pkl")
 DB_PATH = os.path.join(BASE_DIR, "students.db")
+
+# Load Admin Credentials from environment or use defaults
+app.config['ADMIN_USERNAME'] = os.environ.get('STUDENT_ADMIN_USER', 'admin')
+app.config['ADMIN_PASSWORD'] = os.environ.get('STUDENT_ADMIN_PASSWORD', 'admin123')
 
 # Load the trained machine learning model once at startup
 try:
@@ -35,7 +41,7 @@ def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    # We store all inputs + ML output predictions + probability metrics
+    # We store all inputs + ML output predictions + probability metrics + extra panel attributes
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS students (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -59,6 +65,8 @@ def init_db():
             prediction TEXT,
             predicted_performance TEXT,
             pass_probability REAL,
+            sleep_hours INTEGER DEFAULT 8,
+            assignments INTEGER DEFAULT 85,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -75,6 +83,10 @@ def init_db():
         cursor.execute("ALTER TABLE students ADD COLUMN predicted_performance TEXT")
         # Backfill values from existing prediction column
         cursor.execute("UPDATE students SET predicted_performance = prediction")
+    if 'sleep_hours' not in columns:
+        cursor.execute("ALTER TABLE students ADD COLUMN sleep_hours INTEGER DEFAULT 8")
+    if 'assignments' not in columns:
+        cursor.execute("ALTER TABLE students ADD COLUMN assignments INTEGER DEFAULT 85")
             
     conn.commit()
     conn.close()
@@ -82,6 +94,16 @@ def init_db():
 
 # Initialize database
 init_db()
+
+# Decorator to secure Admin Panel routes
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            flash("Please log in to access the Admin Panel.", "warning")
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/')
 def index():
@@ -126,6 +148,11 @@ def predict_form():
     """Render the Student Prediction Form page."""
     return render_template('predict_form.html')
 
+@app.route('/about')
+def about():
+    """Render a dedicated About page explaining the performance model details."""
+    return render_template('about.html')
+
 @app.route('/predict', methods=['POST'])
 def predict():
     """Extract inputs, validate, save to SQLite, runs prediction, update SQLite, and render result."""
@@ -154,6 +181,9 @@ def predict():
         G1 = int(request.form.get('G1', 10))
         G2 = int(request.form.get('G2', 10))
         
+        sleep_hours = int(request.form.get('sleep_hours', 8))
+        assignments = int(request.form.get('assignments', 85))
+        
         # Validations
         if not student_name or not roll_number:
             flash("Validation Error: Student Name and Roll Number are required.", "warning")
@@ -166,6 +196,12 @@ def predict():
             return redirect(url_for('predict_form'))
         if not (0 <= G1 <= 20) or not (0 <= G2 <= 20):
             flash("Validation Error: Term grades G1 and G2 must be between 0 and 20.", "warning")
+            return redirect(url_for('predict_form'))
+        if not (3 <= sleep_hours <= 12):
+            flash("Validation Error: Sleep Hours must be between 3 and 12 hours.", "warning")
+            return redirect(url_for('predict_form'))
+        if not (0 <= assignments <= 100):
+            flash("Validation Error: Assignments Completion Rate must be between 0 and 100%.", "warning")
             return redirect(url_for('predict_form'))
             
         # Reconstruct DataFrame with exact column order
@@ -190,17 +226,18 @@ def predict():
         cursor.execute("""
             INSERT INTO students (
                 student_name, roll_number, sex, age, address, Medu, Fedu, studytime, failures, schoolsup, 
-                famsup, romantic, goout, health, absences, G1, G2, prediction, predicted_performance, pass_probability
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                famsup, romantic, goout, health, absences, G1, G2, prediction, predicted_performance, pass_probability,
+                sleep_hours, assignments
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             student_name, roll_number, sex, age, address, Medu, Fedu, studytime, failures, schoolsup,
-            famsup, romantic, goout, health, absences, G1, G2, prediction_text, prediction_text, pass_prob
+            famsup, romantic, goout, health, absences, G1, G2, prediction_text, prediction_text, pass_prob,
+            sleep_hours, assignments
         ))
         conn.commit()
         conn.close()
         
         # Get the creation time
-        from datetime import datetime
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Structure variables to render result page
@@ -211,6 +248,8 @@ def predict():
             'pass_prob': pass_prob,
             'fail_prob': fail_prob,
             'created_at': current_time,
+            'sleep_hours': sleep_hours,
+            'assignments': assignments,
             'features': {
                 'sex': sex, 'age': age, 'address': address, 'Medu': Medu, 'Fedu': Fedu,
                 'studytime': studytime, 'failures': failures, 'schoolsup': schoolsup,
@@ -228,36 +267,156 @@ def predict():
         flash(f"SQL/Model Operation Error: {str(e)}", "danger")
         return redirect(url_for('predict_form'))
 
-@app.route('/history')
-def history():
-    """Fetch all history records from sqlite for displaying in table template."""
+# ====================================================
+# ADMIN PANEL ROUTES
+# ====================================================
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    """Admin secure Login page."""
+    if session.get('admin_logged_in'):
+        return redirect(url_for('admin_dashboard'))
+        
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '').strip()
+        
+        # Retrieve credentials from Flask app config
+        admin_user = app.config.get('ADMIN_USERNAME', 'admin')
+        admin_pass = app.config.get('ADMIN_PASSWORD', 'admin123')
+        
+        if username == admin_user and password == admin_pass:
+            session['admin_logged_in'] = True
+            flash("Welcome back, Administrator!", "success")
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash("Invalid administrator credentials. Authentication failed.", "danger")
+            
+    return render_template('admin_login.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    """Logs the Administrator out of the session."""
+    session.pop('admin_logged_in', None)
+    flash("You have been signed out of the Administrator Panel.", "info")
+    return redirect(url_for('admin_login'))
+
+@app.route('/admin')
+@admin_required
+def admin_dashboard():
+    """Fetch live counts and prediction summary for the Admin Panel Dashboard."""
     try:
         conn = sqlite3.connect(DB_PATH)
-        # Using sqlite3.Row configuration to access values by keys
+        cursor = conn.cursor()
+        
+        # Compute Stats (1. Total Students)
+        cursor.execute("SELECT COUNT(DISTINCT roll_number) FROM students")
+        total_students = cursor.fetchone()[0] or 0
+        
+        # Compute Stats (2. Total Predictions)
+        cursor.execute("SELECT COUNT(*) FROM students")
+        total_predictions = cursor.fetchone()[0] or 0
+        
+        # Compute Stats (3. Today's Predictions)
+        cursor.execute("SELECT COUNT(*) FROM students WHERE date(created_at, 'localtime') = date('now', 'localtime')")
+        today_predictions = cursor.fetchone()[0] or 0
+        
+        # Compute Stats (4. Latest Prediction Time)
+        cursor.execute("SELECT datetime(created_at, 'localtime') FROM students ORDER BY created_at DESC LIMIT 1")
+        latest_pred_row = cursor.fetchone()
+        latest_prediction_time = latest_pred_row[0] if latest_pred_row else "No Predictions Yet"
+        
+        conn.close()
+    except Exception as e:
+        total_students = 0
+        total_predictions = 0
+        today_predictions = 0
+        latest_prediction_time = "Error Fetching Data"
+        print(f"Error querying dashboard metrics: {e}")
+        
+    stats = {
+        'total_students': total_students,
+        'total_predictions': total_predictions,
+        'today_predictions': today_predictions,
+        'latest_prediction_time': latest_prediction_time
+    }
+    
+    return render_template('admin_dashboard.html', stats=stats)
+
+@app.route('/history')
+def student_history():
+    """Display prediction history for students (public view)."""
+    try:
+        conn = sqlite3.connect(DB_PATH)
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM students ORDER BY created_at DESC")
-        history_records = cursor.fetchall()
+        records = cursor.fetchall()
         conn.close()
     except Exception as e:
-        history_records = []
-        flash(f"Error querying history: {e}", "danger")
-        
-    return render_template('history.html', records=history_records)
+        records = []
+        flash(f"Error loading history: {e}", "danger")
+    return render_template('history.html', records=records)
 
-@app.route('/clear_history', methods=['POST'])
-def clear_history():
-    """Clear all records from database history."""
+
+@app.route('/admin/history')
+@admin_required
+def admin_history():
+    """Displays Student Prediction History with dynamic search & filtering directly from DB."""
+    search_query = request.args.get('search', '').strip()
+    result_filter = request.args.get('result', '').strip()
+    date_filter = request.args.get('date', '').strip()
+    
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        query = "SELECT * FROM students WHERE 1=1"
+        params = []
+        
+        if search_query:
+            query += " AND (student_name LIKE ? OR roll_number LIKE ?)"
+            params.append(f"%{search_query}%")
+            params.append(f"%{search_query}%")
+            
+        if result_filter:
+            query += " AND prediction = ?"
+            params.append(result_filter)
+            
+        if date_filter:
+            query += " AND date(created_at, 'localtime') = date(?)"
+            params.append(date_filter)
+            
+        query += " ORDER BY created_at DESC"
+        
+        cursor.execute(query, params)
+        records = cursor.fetchall()
+        conn.close()
+    except Exception as e:
+        records = []
+        flash(f"SQL querying failed: {e}", "danger")
+        
+    return render_template('admin_history.html', 
+                           records=records, 
+                           search=search_query, 
+                           result_filter=result_filter, 
+                           date_filter=date_filter)
+
+@app.route('/admin/clear_history', methods=['POST'])
+@admin_required
+def admin_clear_history():
+    """Delete all prediction records from the database."""
     try:
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         cursor.execute("DELETE FROM students")
         conn.commit()
         conn.close()
-        flash("History cleared successfully!", "success")
+        flash("All prediction history cleared.", "success")
     except Exception as e:
-        flash(f"Error clearing logs: {e}", "danger")
-    return redirect(url_for('history'))
+        flash(f"Error clearing history: {e}", "danger")
+    return redirect(url_for('admin_history'))
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

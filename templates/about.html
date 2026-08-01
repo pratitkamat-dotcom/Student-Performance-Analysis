@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}About - Student Performance Analyser{% endblock %}
+
+{% block content %}
+<div class="row pt-3 justify-content-center">
+    <div class="col-lg-10">
+        <!-- Main Panel Header -->
+        <div class="glass-panel text-center mb-5 p-5">
+            <i class="fa-solid fa-circle-info text-info fa-4x mb-4"></i>
+            <h1 class="header-accent display-5 fw-bold mb-3">About the Predictor Model</h1>
+            <p class="text-muted fs-5 px-md-5">
+                Understand the dataset parameters, feature encoding, machine learning analytics, and algorithm details driving academic success predictions.
+            </p>
+        </div>
+
+        <!-- Details Sections -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="glass-panel h-100">
+                    <h3 class="custom-card-header mb-3"><i class="fa-solid fa-brain me-2"></i>Logistic Regression Classifier</h3>
+                    <p class="text-muted">
+                        The predictions are powered by a supervised <strong>Logistic Regression model</strong> trained on historical student performance records. Logistic regression predicts probabilities of class membership (PASS vs. FAIL) using a logistic sigmoid function.
+                    </p>
+                    <hr class="border-secondary my-3">
+                    <ul class="text-muted list-unstyled fs-6 lh-lg">
+                        <li><i class="fa-solid fa-circle-check text-success me-2"></i><strong>Feature Scaling:</strong> Grades G1, G2 and absences scaled appropriately</li>
+                        <li><i class="fa-solid fa-circle-check text-success me-2"></i><strong>Threshold Limits:</strong> Standard 50% threshold separating pass from risk levels</li>
+                        <li><i class="fa-solid fa-circle-check text-success me-2"></i><strong>Performance Metrics:</strong> Model optimized for high sensitivity (risk recall)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="glass-panel h-100">
+                    <h3 class="custom-card-header mb-3" style="color: #00F5D4;"><i class="fa-solid fa-database me-2"></i>UCI Cortez Dataset</h3>
+                    <p class="text-muted">
+                        Our underlying training features are based on the popular UCI Student Performance dataset (Cortez & Silva, 2008), which records academic accomplishments in math and Portuguese courses. 
+                    </p>
+                    <hr class="border-secondary my-3">
+                    <p class="text-muted fs-6">
+                        The predictor maps 15 core parameters capturing family demographic profile, student study logs, weekly outings, and existing scores to deliver real-time outcomes.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Specification Card -->
+        <div class="glass-panel mb-5">
+            <h3 class="custom-card-header mb-4 text-center" style="color: #FFD166;"><i class="fa-solid fa-sliders me-2"></i>Student Profiling Attributes</h3>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Parameter Name</th>
+                            <th>Description</th>
+                            <th>Database Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Student Name & Roll Number</td>
+                            <td>Identification labels for administration matching.</td>
+                            <td>TEXT</td>
+                        </tr>
+                        <tr>
+                            <td>Weekly Study Time</td>
+                            <td>Estimated weekly hours spent studying: &lt;2h, 2-5h, 5-10h, or &gt;10h.</td>
+                            <td>INTEGER</td>
+                        </tr>
+                        <tr>
+                            <td>Attendance</td>
+                            <td>Number of school absences recorded during the current term (0–93 days).</td>
+                            <td>INTEGER</td>
+                        </tr>
+                        <tr>
+                            <td>Previous Marks</td>
+                            <td>Semester 1 (G1) and Semester 2 (G2) grade averages evaluated on a 0-20 scale.</td>
+                            <td>INTEGER</td>
+                        </tr>
+                        <tr>
+                            <td>Sleep Hours per Night</td>
+                            <td>Average night sleep hours logged inside portal indicators (3–12 hours).</td>
+                            <td>INTEGER</td>
+                        </tr>
+                        <tr>
+                            <td>Assignments Ratio</td>
+                            <td>Submission percentage rate of required assignments in active modules (0–100%).</td>
+                            <td>INTEGER</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CTA back to prediction -->
+        <div class="text-center mb-5">
+            <a href="{{ url_for('predict_form') }}" class="btn btn-predict btn-lg px-4">
+                <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Evaluate a Student
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

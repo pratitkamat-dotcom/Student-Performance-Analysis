@@ -43,6 +43,7 @@ body {
 .header-accent {
     background: linear-gradient(to right, #ffffff, #8892b0);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: 800;
 }
@@ -201,3 +202,62 @@ body {
 .animated-fade-in {
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* Admin specific styles */
+.admin-card-hover {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.admin-card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 242, 254, 0.15);
+    border-color: var(--accent-neon) !important;
+}
+
+/* Custom search components */
+.search-input-group {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.search-input-group .form-control {
+    border: none !important;
+}
+
+/* Admin layout custom tags */
+.admin-navbar {
+    background: rgba(12, 10, 24, 0.8) !important;
+    border-bottom: 2px solid rgba(0, 242, 254, 0.25) !important;
+}
+.admin-badge {
+    background: linear-gradient(135deg, #00F2FE 0%, #4FACFE 100%);
+    color: #121023;
+    font-weight: 700;
+}
+
+/* Modern tables within glass-panels */
+.table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+}
+.table {
+    margin-bottom: 0;
+}
+.table th {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--accent-neon) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+.table td {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: var(--text-primary) !important;
+}
+.table-hover tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
